@@ -1,33 +1,64 @@
-# data "aws_availability_zones" "available" {
-#   state = "available"
-# }
-data "aws_availability_zones" "available" {}
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.2.0"
+resource "aws_eip" "nat" {
+  count = 3
 
-  name            = var.vpc_name
-  cidr            = "10.0.0.0/16"
-  azs             = data.aws_availability_zones.available.names
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  # NAT Gateway used as EKS worker nodes should not have a public IP
+  vpc = true
+}
+
+module "app_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "wordpress-app-vpc"
+  cidr = var.app_cidr
+
+  azs             = var.availability_zones
+  private_subnets = var.app_private_subnets
+  public_subnets  = var.app_public_subnets
+
   enable_nat_gateway   = true
-  single_nat_gateway   = true
+  enable_vpn_gateway   = true
   enable_dns_hostnames = true
+  reuse_nat_ips        = true
+  external_nat_ip_ids  = aws_eip.nat.*.id
 
   tags = {
+    Context                                     = "wordpress-app"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
-
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"           = "1"
+  }
   public_subnet_tags = {
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb"                    = "1"
+  }
+}
+
+module "db_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name = "wordpress-db-vpc"
+  cidr = var.db_cidr
+
+  azs             = var.availability_zones
+  private_subnets = var.db_private_subnets
+  public_subnets  = var.db_public_subnets
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = true
+  single_nat_gateway = true
+
+  tags = {
+    Context = "wordpress-rds"
   }
 
   private_subnet_tags = {
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"           = "1"
+  }
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                    = "1"
   }
 }
