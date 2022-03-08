@@ -21,6 +21,7 @@ module "wordpress-prod" {
 
       bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
 
+      # SSM makes debugging worker nodes much easier
       post_bootstrap_user_data = <<-EOT
       cd /tmp
       sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm

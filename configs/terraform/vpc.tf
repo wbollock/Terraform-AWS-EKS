@@ -16,11 +16,12 @@ module "app_vpc" {
   public_subnets  = var.app_public_subnets
 
   enable_nat_gateway   = true
-  enable_vpn_gateway   = true
+  enable_vpn_gateway   = false
   enable_dns_hostnames = true
   reuse_nat_ips        = true
   external_nat_ip_ids  = aws_eip.nat.*.id
 
+  # These tags are important for the EKS cluster access to various resources
   tags = {
     Context                                     = "wordpress-app"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
@@ -46,7 +47,7 @@ module "db_vpc" {
   public_subnets  = var.db_public_subnets
 
   enable_nat_gateway = true
-  enable_vpn_gateway = true
+  enable_vpn_gateway = false
   single_nat_gateway = true
 
   tags = {
