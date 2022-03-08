@@ -39,21 +39,21 @@ variable "db_cidr" {
 }
 
 variable "app_private_subnets" {
-  description = "CIDR used for private subnets"
+  description = "CIDR used for app private subnets"
   default     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 }
 
 variable "app_public_subnets" {
-  description = "CIDR used for private subnets"
+  description = "CIDR used for app public subnets"
   default     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
 
 variable "db_private_subnets" {
-  description = "CIDR used for private subnets"
+  description = "CIDR used for db private subnets"
   default     = ["11.0.1.0/24", "11.0.2.0/24", "11.0.3.0/24"]
 }
 
 variable "db_public_subnets" {
-  description = "CIDR used for private subnets"
+  description = "CIDR used for db public subnets"
   default     = ["11.0.101.0/24", "11.0.102.0/24", "11.0.103.0/24"]
 }

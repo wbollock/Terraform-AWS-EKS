@@ -14,5 +14,5 @@
 ## 03/08/2022
 
 1.5 hours: 8:30am -> 10:00am: Tidying up EKS/RDS setup, horizontal pod autoscaling
-45 minutes: 10:00am -> 10:45am: Cloudfront work
-1.5 hours: 8:30am -> 10:00am: Tidying up EKS/RDS setup, horizontal pod autoscaling
+2 hours: 10:00am -> 12:00pm: Cloudfront work
+2 hours: 1:00pm -> 3:00pm: Documentation, diagram, finishing touches

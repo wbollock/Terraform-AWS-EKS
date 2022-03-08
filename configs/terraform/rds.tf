@@ -24,6 +24,7 @@ module "database" {
   # Not worth cost for Multi-AZ as a demo
   multi_az               = "false"
 
+  # Backups and general managed chores
   maintenance_window      = "Wed:00:00-Wed:03:00"
   backup_window           = "03:00-06:00"
   backup_retention_period = "35"
