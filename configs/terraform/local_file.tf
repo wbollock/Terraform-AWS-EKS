@@ -5,9 +5,9 @@ resource "null_resource" "eks_init" {
 }
 
 resource "local_file" "deployment" {
-filename = "${path.module}./kubernetes/deployment.yaml"
+  filename = "${path.module}./kubernetes/deployment.yaml"
 
-content  = <<EOF
+  content = <<EOF
 apiVersion: v1
 kind: Service
 metadata:

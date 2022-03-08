@@ -3,7 +3,7 @@ output "cloudfront_endpount" {
 }
 
 data "local_file" "elb_hostname" {
-    filename = "${path.module}/elb_hostname"
+  filename = "${path.module}/elb_hostname"
 }
 
 output "elb_hostname" {

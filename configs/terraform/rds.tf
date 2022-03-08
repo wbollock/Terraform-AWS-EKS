@@ -4,12 +4,12 @@ module "database" {
 
   identifier = "wordpress-prod-db"
 
-  engine            = "mysql"
-  engine_version    = "5.7"
-  instance_class    = "db.t2.small"
+  engine         = "mysql"
+  engine_version = "5.7"
+  instance_class = "db.t2.small"
 
   # Storage will autoscale
-  allocated_storage = 5
+  allocated_storage     = 5
   max_allocated_storage = 100
 
   name     = "wordpress"
@@ -20,9 +20,9 @@ module "database" {
   iam_database_authentication_enabled = true
 
   vpc_security_group_ids = ["${module.db_vpc.default_security_group_id}", "${aws_security_group.allow_apps.id}"]
-  
+
   # Not worth cost for Multi-AZ as a demo
-  multi_az               = "false"
+  multi_az = "false"
 
   # Backups and general managed chores
   maintenance_window      = "Wed:00:00-Wed:03:00"
