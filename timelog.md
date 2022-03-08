@@ -7,4 +7,11 @@
 
 ## 03/07/2022
 
-X minutes: 12:35pm -> : Finish EKS creation
+1 hour: 12:30pm -> 1:30pm: Finish EKS creation
+2 hours: 1:30pm -> 3:30pm: RDS creation
+3 hours: 8:30pm -> 11:30pm: Refactor/RDS connection
+
+## 03/08/2022
+
+1.5 hours: 8:30am -> 10:00am: Tidying up EKS/RDS setup, horizontal pod autoscaling
+45 minutes: 10:00am -> 10:45am: Cloudfront work

@@ -58,3 +58,4 @@ output "config_map" {
   description = "Config map to allow EKS to autoscale"
   value       = local.config_map
 }
+
