@@ -4,22 +4,6 @@ resource "null_resource" "eks_init" {
   }
 }
 
-resource "local_file" "db_config_map" {
-  content  = <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-config-map
-  namespace: default
-data:
-  DB_HOST: "${module.database.this_db_instance_address}"
-  DB_NAME: "${module.database.this_db_instance_name}"
-  DB_USER: "${module.database.this_db_instance_username}"
-  DB_PASSWORD: "${module.database.this_db_instance_password}"
-  EOF
-  filename = "${path.module}./kubernetes/db-config-map.yaml"
-}
-
 resource "local_file" "deployment" {
 filename = "${path.module}./kubernetes/deployment.yaml"
 
