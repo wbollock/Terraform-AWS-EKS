@@ -1,8 +1,8 @@
 resource "random_string" "random" {
-  length           = 30
-  special          = false
-  lower            = true
-  upper            = false
+  length  = 30
+  special = false
+  lower   = true
+  upper   = false
 }
 
 resource "aws_s3_bucket" "cloudfront_logs" {
