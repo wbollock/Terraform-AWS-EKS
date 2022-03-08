@@ -1,64 +1,52 @@
-resource "aws_iam_role" "wordpress-cluster" {
-  name = "terraform-eks-wordpress-cluster"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
-}
-
-resource "aws_iam_role_policy_attachment" "wordpress-cluster-AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.wordpress-cluster.name
-}
-
-resource "aws_iam_role_policy_attachment" "wordpress-cluster-AmazonEKSVPCResourceController" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.wordpress-cluster.name
-}
-
-module "eks" {
-  source = "terraform-aws-modules/eks/aws"
-
-  cluster_name                    = var.cluster_name
-  cluster_version                 = "1.21"
-  cluster_endpoint_private_access = true
-  cluster_endpoint_public_access  = true
-
-  subnet_ids = module.vpc.private_subnets
-  vpc_id     = module.vpc.vpc_id
-
-  # EKS Managed Node Group(s)
-  eks_managed_node_group_defaults = {
-    ami_type       = "AL2_x86_64"
-    disk_size      = 10
-    instance_types = ["t2.small"]
-    # iam_role_additional_policies = aws_iam_role.wordpress-workers.arn
-    # vpc_security_group_ids = [aws_security_group.additional.id]
-  }
+module "wordpress-prod" {
+  source       = "terraform-aws-modules/eks/aws"
+  cluster_name = var.cluster_name
+  subnet_ids   = module.app_vpc.private_subnets
+  vpc_id       = module.app_vpc.vpc_id
 
   eks_managed_node_groups = {
     prod = {
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
+      instance_types = ["t2.small"]
+      min_size       = 1
+      max_size       = 3
+      desired_size   = 3
 
-      additional_security_group_ids = [aws_security_group.worker_group_application.id]
+      create_launch_template = false
+      launch_template_name   = ""
+
+      pre_bootstrap_user_data = <<-EOT
+      echo "foo"
+      export FOO=bar
+      EOT
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
+
+      post_bootstrap_user_data = <<-EOT
+      cd /tmp
+      sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+      sudo systemctl enable amazon-ssm-agent
+      sudo systemctl start amazon-ssm-agent
+      EOT
+
+      tags = {
+        key                 = "Name"
+        value               = "wordpress-worker"
+        propagate_at_launch = true
+      }
+    }
+  }
+
+  cluster_addons = {
+    coredns = {
+      resolve_conflicts = "OVERWRITE"
+    }
+    kube-proxy = {}
+    vpc-cni = {
+      resolve_conflicts = "OVERWRITE"
     }
   }
 
   tags = {
-    Environment = "prod"
-    Terraform   = "true"
+    environment = "prod"
   }
 }

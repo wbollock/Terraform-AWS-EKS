@@ -1,0 +1,5 @@
+resources:
+- db-config-map.yaml
+- deployment.yaml
+- hpa.yaml
+- metrics-server.yaml

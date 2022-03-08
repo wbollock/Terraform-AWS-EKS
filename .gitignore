@@ -39,3 +39,4 @@ config_map.yaml
 db-config-map.yaml
 wordpress-prod.yaml
 elb_hostname
+deployment.yaml
