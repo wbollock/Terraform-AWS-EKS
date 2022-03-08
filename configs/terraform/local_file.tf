@@ -67,3 +67,9 @@ spec:
           value:  "${module.database.this_db_instance_name}"
 EOF
 }
+
+resource "null_resource" "elb_hostname" {
+  provisioner "local-exec" {
+    command = "kubectl get services wordpress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' > cloudfront/elb_hostname"
+  }
+}

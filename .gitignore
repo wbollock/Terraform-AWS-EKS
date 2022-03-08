@@ -35,5 +35,8 @@ override.tf.json
 terraform.rc
 
 # Dependant on cluster creation
+config_map.yaml
 db-config-map.yaml
+wordpress-prod.yaml
+elb_hostname
 deployment.yaml

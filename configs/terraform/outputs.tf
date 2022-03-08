@@ -5,3 +5,4 @@ output "database_endpoint" {
 output "cluster_endpoint" {
   value = module.wordpress-prod.cluster_endpoint
 }
+
