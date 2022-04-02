@@ -1,4 +1,4 @@
-# Limble Solutions Project
+# Terraform AWS EKS
 
 This is a proof-of-concept Wordpress deployment on AWS, utilizing Terraform, EKS, and MySQL on RDS.
 
